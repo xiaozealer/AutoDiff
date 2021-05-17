@@ -16,3 +16,5 @@ class Graph():
         self.variable = set()
         self.constants = set()
         self.placeholders = set()
+        global _g
+        _g = self
