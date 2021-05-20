@@ -21,29 +21,40 @@ class Variable:
 
     def __mul__(self, b):
         result = self.val * b.val
-        gradient = ([self, b.val], [b, self.val])
+        gradient = ((self, b.val), (b, self.val))
         print(gradient)
         return Variable(result, gradient=gradient)
 
     def __neg__(self):
         result = -1 * self.val
-        gradient = ([self, -1])
+        gradient = ((self, -1),)
         return Variable(result, gradient=gradient)
 
     def __sub__(self, b):
         result = self.val - b.val
-        gradient = ([self, 1], [b, -1])
+        gradient = ((self, 1), (b, -1))
         print(gradient)
         return Variable(result, gradient=gradient)
 
     def __truediv__(self, b):
         result = self.val / b.val
-        gradient = ([self, 1/b.val], [b, -self.val * (b.val**(-2))])
+        gradient = ((self, 1/b.val), (b, -self.val * (b.val**(-2))))
         print(gradient)
         return Variable(result, gradient=gradient)
 
     def __repr__(self) -> str:
         return '{}:{}'.format(self.name, self.val)
+
+    # TODO add more activation functions
+    def sin(self):
+        result = np.sin(self.val)
+        gradient = ((self, np.cos(self.val)),)
+        return Variable(result, gradient=gradient)
+
+    def cos(self):
+        result = np.cos(self.val)
+        gradient = ((self, -np.sin(self.val)))
+        return Variable(result, gradient=gradient)
 
     def get_gradient(self):
         gradients = defaultdict(lambda: 0)
@@ -51,7 +62,7 @@ class Variable:
         return gradients
 
     def compute_gradient(self, gradients, last_gradient):
-        for var, derative in self.local_gradient:  # empty to be fixed
+        for var, derative in self.local_gradient:
             local_grad = last_gradient * derative
             gradients[var] += local_grad
             var.compute_gradient(gradients, local_grad)
