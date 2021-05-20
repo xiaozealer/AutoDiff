@@ -1,5 +1,5 @@
 from collections import defaultdict
-
+import numpy as np
 
 count = 0
 
@@ -33,6 +33,12 @@ class Variable:
     def __sub__(self, b):
         result = self.val - b.val
         gradient = ([self, 1], [b, -1])
+        print(gradient)
+        return Variable(result, gradient=gradient)
+
+    def __truediv__(self, b):
+        result = self.val / b.val
+        gradient = ([self, 1/b.val], [b, -self.val * (b.val**(-2))])
         print(gradient)
         return Variable(result, gradient=gradient)
 
