@@ -1,5 +1,11 @@
-# AutoDiff
+# Automatic Differentiation
 
-python implementation of automatic differentiation
+Python implementation of automatic differentiation
 
-- Computational Graph representation in `Graph.py`
+Required package: `Numpy`
+
+**TODO**
+
+- to add comments and usage
+- to support more common functions
+- write more test cases
