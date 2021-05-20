@@ -1,8 +1,5 @@
 
 
-from Variable import Variable
-
-
 class Operator:
     def __init__(self):
         pass

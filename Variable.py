@@ -1,11 +1,10 @@
-from Operator import Operator
 from collections import defaultdict
 
 
 count = 0
 
 
-class Variable():
+class Variable:
 
     def __init__(self, value, name=None, gradient=()):
         global count
@@ -17,19 +16,36 @@ class Variable():
     def __add__(self, b):
         result = self.val + b.val
         gradient = ([self, 1], [b, 1])
-        return Variable(result, gradient)
+        print(gradient)
+        return Variable(result, gradient=gradient)
 
     def __mul__(self, b):
         result = self.val * b.val
         gradient = ([self, b.val], [b, self.val])
-        return Variable(result, gradient)
+        print(gradient)
+        return Variable(result, gradient=gradient)
 
-    def get_gradient(self):
-        # TODO fix this function
-        gradients = defaultdict(lambda: 0)
+    def __neg__(self):
+        result = -1 * self.val
+        gradient = ([self, -1])
+        return Variable(result, gradient=gradient)
 
-    def __str__(self) -> str:
-        return '{}:{}'.format(self.name, self.val)
+    def __sub__(self, b):
+        result = self.val - b.val
+        gradient = ([self, 1], [b, -1])
+        print(gradient)
+        return Variable(result, gradient=gradient)
 
     def __repr__(self) -> str:
         return '{}:{}'.format(self.name, self.val)
+
+    def get_gradient(self):
+        gradients = defaultdict(lambda: 0)
+        self.compute_gradient(gradients, 1)
+        return gradients
+
+    def compute_gradient(self, gradients, last_gradient):
+        for var, derative in self.local_gradient:  # empty to be fixed
+            local_grad = last_gradient * derative
+            gradients[var] += local_grad
+            var.compute_gradient(gradients, local_grad)
